@@ -1,7 +1,8 @@
-package com.artpit.android.shoppinglist
+package com.artpit.android.shoppinglist.presentation
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import com.artpit.android.shoppinglist.R
 
 class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
