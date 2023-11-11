@@ -1,5 +1,6 @@
 package com.artpit.android.shoppinglist.data
 
+import android.util.Log
 import com.artpit.android.shoppinglist.domain.ShopItem
 import com.artpit.android.shoppinglist.domain.ShopListRepository
 
@@ -19,6 +20,7 @@ class ShopListRepositoryImpl : ShopListRepository {
             shopItem.id = autoincrementId++
         }
 
+        Log.d("Test", "Test")
         addShopItem(shopItem)
     }
 
