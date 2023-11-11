@@ -1,14 +1,30 @@
 package com.artpit.android.shoppinglist.data
 
-import android.util.Log
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import com.artpit.android.shoppinglist.domain.ShopItem
 import com.artpit.android.shoppinglist.domain.ShopListRepository
+import kotlin.random.Random
 
-class ShopListRepositoryImpl : ShopListRepository {
+object ShopListRepositoryImpl : ShopListRepository {
+    private val shopListLD = MutableLiveData<List<ShopItem>>()
     private val shopList = mutableListOf<ShopItem>()
     private var autoincrementId = 0
-    override fun getShopList(): List<ShopItem> {
-        return shopList.toList()
+
+    init {
+        for (i in 0..< 5) {
+            val shopItem = ShopItem(
+                name ="name $i",
+                count = i,
+                enabled = Random.nextBoolean()
+            )
+
+            addShopItem(shopItem)
+        }
+    }
+
+    override fun getShopList(): LiveData<List<ShopItem>> {
+        return shopListLD
     }
 
     override fun getShopItem(id: Int): ShopItem {
@@ -19,17 +35,22 @@ class ShopListRepositoryImpl : ShopListRepository {
         if (shopItem.id == ShopItem.UNKNOWN_ID) {
             shopItem.id = autoincrementId++
         }
-
-        addShopItem(shopItem)
+        shopList.add(shopItem)
+        updateShopListLD()
     }
 
     override fun deleteShopItem(shopItem: ShopItem) {
         shopList.remove(shopItem)
+        updateShopListLD()
     }
 
     override fun editShopItem(shopItem: ShopItem) {
         val oldElement = getShopItem(shopItem.id)
         shopList.remove(oldElement)
         addShopItem(shopItem)
+    }
+
+    private fun updateShopListLD() {
+        shopListLD.value = shopList.toList()
     }
 }

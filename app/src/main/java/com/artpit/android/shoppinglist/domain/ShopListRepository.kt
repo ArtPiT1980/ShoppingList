@@ -1,7 +1,9 @@
 package com.artpit.android.shoppinglist.domain
 
+import androidx.lifecycle.LiveData
+
 interface ShopListRepository {
-    fun getShopList(): List<ShopItem>
+    fun getShopList(): LiveData<List<ShopItem>>
     fun getShopItem(id: Int): ShopItem
     fun addShopItem(shopItem: ShopItem)
     fun deleteShopItem(shopItem: ShopItem)
