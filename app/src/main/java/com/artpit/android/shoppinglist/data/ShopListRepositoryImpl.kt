@@ -20,7 +20,6 @@ class ShopListRepositoryImpl : ShopListRepository {
             shopItem.id = autoincrementId++
         }
 
-        Log.d("Test", "Test")
         addShopItem(shopItem)
     }
 
