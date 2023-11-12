@@ -12,7 +12,7 @@ object ShopListRepositoryImpl : ShopListRepository {
     private var autoincrementId = 0
 
     init {
-        for (i in 0..<1000) {
+        for (i in 0..<15) {
             val shopItem = ShopItem(
                 name = "name $i",
                 count = i,

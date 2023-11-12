@@ -1,12 +1,12 @@
 package com.artpit.android.shoppinglist.presentation
 
 import android.os.Bundle
-import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
 import com.artpit.android.shoppinglist.R
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 
 class MainActivity : AppCompatActivity() {
     private lateinit var viewModel: MainViewModel
@@ -14,6 +14,12 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+
+        val buttonAddShopItem = findViewById<FloatingActionButton>(R.id.add_shop_item)
+        buttonAddShopItem.setOnClickListener {
+            val intent = ShopItemActivity.newIntentAddMode(this)
+            startActivity(intent)
+        }
 
         initRecyclerView()
         viewModel = ViewModelProvider(this)[MainViewModel::class.java]
@@ -30,10 +36,12 @@ class MainActivity : AppCompatActivity() {
             adapter = shopListAdapter
             recycledViewPool.setMaxRecycledViews(
                 ShopListAdapter.VIEW_TYPE_ENABLED,
-                ShopListAdapter.MAX_POOL_SIZE)
+                ShopListAdapter.MAX_POOL_SIZE
+            )
             recycledViewPool.setMaxRecycledViews(
                 ShopListAdapter.VIEW_TYPE_DISABLED,
-                ShopListAdapter.MAX_POOL_SIZE)
+                ShopListAdapter.MAX_POOL_SIZE
+            )
         }
 
         setOnShopItemClickListener()
@@ -70,7 +78,8 @@ class MainActivity : AppCompatActivity() {
 
     private fun setOnShopItemClickListener() {
         shopListAdapter.onShopItemClickListener = {
-            Log.d("MainActivity", "onClick: $it")
+            val intent = ShopItemActivity.newIntentEditMode(this, it.id)
+            startActivity(intent)
         }
     }
 }
