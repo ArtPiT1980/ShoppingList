@@ -1,16 +1,22 @@
 package com.artpit.android.shoppinglist.presentation
 
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.artpit.android.shoppinglist.R
 import com.artpit.android.shoppinglist.domain.ShopItem
 
 class ShopListAdapter : RecyclerView.Adapter<ShopItemViewHolder>() {
+    var count = 0
     var shopList = listOf<ShopItem>()
         set(value) {
+            val callback = ShopListDiffCallback(field, value)
+            val diffResult = DiffUtil.calculateDiff(callback)
+            diffResult.dispatchUpdatesTo(this)
             field = value
-            notifyDataSetChanged()
+//            notifyDataSetChanged()
         }
 
     var onShopItemLongClickListener: ((ShopItem) -> Unit)? = null
@@ -44,6 +50,7 @@ class ShopListAdapter : RecyclerView.Adapter<ShopItemViewHolder>() {
     }
 
     override fun onBindViewHolder(holder: ShopItemViewHolder, position: Int) {
+        Log.d("ShopListAdapter", "onBindViewHolder: ${++count}")
         val shopItem = shopList[position]
         holder.tvName.text = shopItem.name
         holder.tvCount.text = shopItem.count.toString()
