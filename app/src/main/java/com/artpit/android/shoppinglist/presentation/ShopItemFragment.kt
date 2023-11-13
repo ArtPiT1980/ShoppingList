@@ -119,7 +119,6 @@ class ShopItemFragment() : Fragment() {
 
     private fun launchEditMode() {
         viewModel.getShopItem(shopItemId)
-
         viewModel.shopItem.observe(viewLifecycleOwner) {
             etName.setText(it.name)
             etCount.setText(it.count.toString())
@@ -160,7 +159,6 @@ class ShopItemFragment() : Fragment() {
 
     private fun parseParams() {
         val args = requireArguments()
-
         if (!args.containsKey(SCREEN_MODE)) {
             throw RuntimeException("Param screen mode is absent")
         }
@@ -175,12 +173,10 @@ class ShopItemFragment() : Fragment() {
                 }
 
                 shopItemId = args.getInt(ITEM_ID, ShopItem.UNKNOWN_ID)
-
                 if (shopItemId == ShopItem.UNKNOWN_ID) {
                     throw RuntimeException("Invalid id $shopItemId")
                 }
             }
-
             else -> throw RuntimeException("Unknown screen mode $screenMode")
         }
     }

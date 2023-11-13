@@ -60,20 +60,17 @@ class ShopItemActivity : AppCompatActivity() {
         }
 
         val mode = intent.getStringExtra(EXTRA_SCREEN_MODE)
-
         if (mode != MODE_ADD && mode != MODE_EDIT) {
             throw RuntimeException("Unknown screen mode $mode")
         }
 
         screenMode = mode
-
         if (screenMode == MODE_EDIT) {
             if (!intent.hasExtra(EXTRA_ITEM_ID)) {
                 throw RuntimeException("Shop item id is absent")
             }
 
             shopItemId = intent.getIntExtra(EXTRA_ITEM_ID, ShopItem.UNKNOWN_ID)
-
             if (shopItemId == ShopItem.UNKNOWN_ID) {
                 throw RuntimeException("Invalid id $shopItemId")
             }

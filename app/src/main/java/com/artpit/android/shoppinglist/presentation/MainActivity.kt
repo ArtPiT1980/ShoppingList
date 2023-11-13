@@ -1,7 +1,6 @@
 package com.artpit.android.shoppinglist.presentation
 
 import android.os.Bundle
-import android.window.OnBackInvokedDispatcher
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentContainerView
@@ -30,7 +29,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun launchFragment(fragment: Fragment, name: String) {
-//        supportFragmentManager.popBackStack()
+        supportFragmentManager.popBackStack()
         supportFragmentManager.beginTransaction()
             .replace(R.id.shop_item_container, fragment)
             .addToBackStack(name)
