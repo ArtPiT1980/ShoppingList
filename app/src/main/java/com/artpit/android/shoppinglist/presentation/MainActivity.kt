@@ -28,11 +28,11 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    private fun launchFragment(fragment: Fragment, name: String) {
+    private fun launchFragment(fragment: Fragment) {
         supportFragmentManager.popBackStack()
         supportFragmentManager.beginTransaction()
             .replace(R.id.shop_item_container, fragment)
-            .addToBackStack(name)
+            .addToBackStack(null)
             .commit()
     }
 
@@ -94,7 +94,7 @@ class MainActivity : AppCompatActivity() {
                 val intent = ShopItemActivity.newIntentEditMode(this, it.id)
                 startActivity(intent)
             } else {
-                launchFragment(ShopItemFragment.newInstanceEditItem(it.id), "edit")
+                launchFragment(ShopItemFragment.newInstanceEditItem(it.id))
             }
         }
     }
@@ -106,13 +106,8 @@ class MainActivity : AppCompatActivity() {
                 val intent = ShopItemActivity.newIntentAddMode(this)
                 startActivity(intent)
             } else {
-                launchFragment(ShopItemFragment.newInstanceAddItem(), "add")
+                launchFragment(ShopItemFragment.newInstanceAddItem())
             }
         }
-    }
-
-    override fun onBackPressed() {
-        super.onBackPressed()
-        supportFragmentManager.popBackStack("add", 0)
     }
 }
