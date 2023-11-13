@@ -1,6 +1,5 @@
 package com.artpit.android.shoppinglist.presentation
 
-import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.text.Editable
@@ -44,19 +43,6 @@ class ShopItemFragment(
         fun newInstanceEditItem(id: Int): ShopItemFragment {
             return ShopItemFragment(MODE_ADD, id)
         }
-
-        fun newIntentAddMode(context: Context): Intent {
-            val intent = Intent(context, ShopItemActivity::class.java)
-            intent.putExtra(EXTRA_SCREEN_MODE, MODE_ADD)
-            return intent
-        }
-
-        fun newIntentEditMode(context: Context, id: Int): Intent {
-            val intent = Intent(context, ShopItemActivity::class.java)
-            intent.putExtra(EXTRA_SCREEN_MODE, MODE_EDIT)
-            intent.putExtra(EXTRA_ITEM_ID, id)
-            return intent
-        }
     }
 
     override fun onCreateView(
@@ -65,7 +51,6 @@ class ShopItemFragment(
         savedInstanceState: Bundle?
     ): View? {
         val view = inflater.inflate(R.layout.fragment_shop_item, container, false)
-
         return view
     }
 
