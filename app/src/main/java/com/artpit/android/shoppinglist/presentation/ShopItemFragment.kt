@@ -1,5 +1,6 @@
 package com.artpit.android.shoppinglist.presentation
 
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.text.Editable
@@ -27,6 +28,8 @@ class ShopItemFragment() : Fragment() {
     private lateinit var btnSave: Button
     private lateinit var intent: Intent
 
+    private lateinit var onEditingFinishedListener: OnEditingFinishedListener
+
     companion object {
         private const val ITEM_ID = "item_id"
         private const val SCREEN_MODE = "extra_mode"
@@ -49,6 +52,19 @@ class ShopItemFragment() : Fragment() {
                     putInt(ITEM_ID, id)
                 }
             }
+    }
+
+    interface OnEditingFinishedListener {
+        fun onEditingFinished()
+    }
+
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        if (context is OnEditingFinishedListener) {
+            onEditingFinishedListener = context
+        } else {
+            throw RuntimeException("Activity must implement OnEditingFinishedListener")
+        }
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -94,8 +110,10 @@ class ShopItemFragment() : Fragment() {
         }
 
         viewModel.shouldCloseScreen.observe(viewLifecycleOwner) {
-            activity?.onBackPressed()
+//            activity?.onBackPressed()
 //            requireActivity().onBackPressed()
+//            (activity as MainActivity).onEditingFinished()
+            onEditingFinishedListener.onEditingFinished()
         }
     }
 
