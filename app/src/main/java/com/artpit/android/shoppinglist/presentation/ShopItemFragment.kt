@@ -15,10 +15,9 @@ import com.artpit.android.shoppinglist.R
 import com.artpit.android.shoppinglist.domain.ShopItem
 import com.google.android.material.textfield.TextInputLayout
 
-class ShopItemFragment(
-    private var screenMode: String = MODE_UNKNOWN,
+class ShopItemFragment() : Fragment() {
+    private var screenMode: String = MODE_UNKNOWN
     private var shopItemId: Int = ShopItem.UNKNOWN_ID
-) : Fragment() {
 
     private lateinit var viewModel: ShopItemViewModel
     private lateinit var tilName: TextInputLayout
@@ -29,20 +28,32 @@ class ShopItemFragment(
     private lateinit var intent: Intent
 
     companion object {
-        private const val EXTRA_ITEM_ID = "extra_item_id"
-        private const val EXTRA_SCREEN_MODE = "extra_mode"
+        private const val ITEM_ID = "item_id"
+        private const val SCREEN_MODE = "extra_mode"
 
         private const val MODE_ADD = "mode_add"
         private const val MODE_EDIT = "mode_edit"
         private const val MODE_UNKNOWN = ""
 
-        fun newInstanceAddItem(): ShopItemFragment {
-            return ShopItemFragment(MODE_ADD)
-        }
+        fun newInstanceAddItem(): ShopItemFragment =
+            ShopItemFragment().apply {
+                arguments = Bundle().apply {
+                    putString(SCREEN_MODE, MODE_ADD)
+                }
+            }
 
-        fun newInstanceEditItem(id: Int): ShopItemFragment {
-            return ShopItemFragment(MODE_ADD, id)
-        }
+        fun newInstanceEditItem(id: Int): ShopItemFragment =
+            ShopItemFragment().apply {
+                arguments = Bundle().apply {
+                    putString(SCREEN_MODE, MODE_EDIT)
+                    putInt(ITEM_ID, id)
+                }
+            }
+    }
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        parseParams()
     }
 
     override fun onCreateView(
@@ -50,14 +61,12 @@ class ShopItemFragment(
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        val view = inflater.inflate(R.layout.fragment_shop_item, container, false)
-        return view
+        return inflater.inflate(R.layout.fragment_shop_item, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         intent = requireActivity().intent
-        parseIntent()
         viewModel = ViewModelProvider(this)[ShopItemViewModel::class.java]
         initViews(view)
         addTextChangeListeners()
@@ -149,29 +158,30 @@ class ShopItemFragment(
         })
     }
 
-    private fun parseIntent() {
-        if (!intent.hasExtra(EXTRA_SCREEN_MODE)) {
+    private fun parseParams() {
+        val args = requireArguments()
+
+        if (!args.containsKey(SCREEN_MODE)) {
             throw RuntimeException("Param screen mode is absent")
         }
 
-        val mode = intent.getStringExtra(EXTRA_SCREEN_MODE)
+        screenMode = args.getString(SCREEN_MODE) ?: MODE_UNKNOWN
 
-        if (mode != MODE_ADD && mode != MODE_EDIT) {
-            throw RuntimeException("Unknown screen mode $mode")
-        }
+        when (screenMode) {
+            MODE_ADD -> {}
+            MODE_EDIT -> {
+                if (!args.containsKey(ITEM_ID)) {
+                    throw RuntimeException("Shop item id is absent")
+                }
 
-        screenMode = mode
+                shopItemId = args.getInt(ITEM_ID, ShopItem.UNKNOWN_ID)
 
-        if (screenMode == MODE_EDIT) {
-            if (!intent.hasExtra(EXTRA_ITEM_ID)) {
-                throw RuntimeException("Shop item id is absent")
+                if (shopItemId == ShopItem.UNKNOWN_ID) {
+                    throw RuntimeException("Invalid id $shopItemId")
+                }
             }
 
-            shopItemId = intent.getIntExtra(EXTRA_ITEM_ID, ShopItem.UNKNOWN_ID)
-
-            if (shopItemId == ShopItem.UNKNOWN_ID) {
-                throw RuntimeException("Invalid id $shopItemId")
-            }
+            else -> throw RuntimeException("Unknown screen mode $screenMode")
         }
     }
 }
