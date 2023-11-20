@@ -9,18 +9,19 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
 import com.artpit.android.shoppinglist.R
+import com.artpit.android.shoppinglist.databinding.ActivityMainBinding
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 
 class MainActivity : AppCompatActivity(), ShopItemFragment.OnEditingFinishedListener {
+    private lateinit var binding: ActivityMainBinding
     private lateinit var viewModel: MainViewModel
     private lateinit var shopListAdapter: ShopListAdapter
-    private var shopItemContainer: FragmentContainerView? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
+        binding = ActivityMainBinding.inflate(layoutInflater)
+        setContentView(binding.root)
 
-        shopItemContainer = findViewById(R.id.shop_item_container)
         setOnButtonAddShopItemClickListener()
         initRecyclerView()
         viewModel = ViewModelProvider(this)[MainViewModel::class.java]
@@ -43,14 +44,13 @@ class MainActivity : AppCompatActivity(), ShopItemFragment.OnEditingFinishedList
     }
 
     private fun isOnePaneMode(): Boolean {
-        return shopItemContainer == null
+        return binding.shopItemContainer == null
     }
 
     private fun initRecyclerView() {
         shopListAdapter = ShopListAdapter()
-        val rvShopList: RecyclerView = findViewById(R.id.rv_shop_list)
 
-        with(rvShopList) {
+        with(binding.rvShopList) {
             adapter = shopListAdapter
             recycledViewPool.setMaxRecycledViews(
                 ShopListAdapter.VIEW_TYPE_ENABLED,
@@ -64,7 +64,7 @@ class MainActivity : AppCompatActivity(), ShopItemFragment.OnEditingFinishedList
 
         setOnShopItemClickListener()
         setOnShopItemLongClickListener()
-        setOnShopItemSwipe(rvShopList)
+        setOnShopItemSwipe(binding.rvShopList)
     }
 
     private fun setOnShopItemSwipe(rvShopList: RecyclerView) {
@@ -106,8 +106,7 @@ class MainActivity : AppCompatActivity(), ShopItemFragment.OnEditingFinishedList
     }
 
     private fun setOnButtonAddShopItemClickListener() {
-        val buttonAddShopItem = findViewById<FloatingActionButton>(R.id.add_shop_item)
-        buttonAddShopItem.setOnClickListener {
+        binding.addShopItem.setOnClickListener {
             if (isOnePaneMode()) {
                 val intent = ShopItemActivity.newIntentAddMode(this)
                 startActivity(intent)
