@@ -4,13 +4,12 @@ import android.os.Bundle
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.FragmentContainerView
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
 import com.artpit.android.shoppinglist.R
 import com.artpit.android.shoppinglist.databinding.ActivityMainBinding
-import com.google.android.material.floatingactionbutton.FloatingActionButton
+
 
 class MainActivity : AppCompatActivity(), ShopItemFragment.OnEditingFinishedListener {
     private lateinit var binding: ActivityMainBinding
@@ -25,6 +24,10 @@ class MainActivity : AppCompatActivity(), ShopItemFragment.OnEditingFinishedList
         setOnButtonAddShopItemClickListener()
         initRecyclerView()
         viewModel = ViewModelProvider(this)[MainViewModel::class.java]
+//        viewModel =
+//            ViewModelProvider(this, ViewModelProvider.AndroidViewModelFactory.getInstance(application)).get(
+//                MainViewModel::class.java
+//            )
         viewModel.shopList.observe(this) {
             shopListAdapter.submitList(it)
         }
